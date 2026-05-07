@@ -1,0 +1,16 @@
+name: SwissKnife
+description: $description
+version: '${version}'
+
+main: org.elalezito.swissKnife.SwissKnife
+api-version: '26.1.2'
+#folia-supported: true
+
+dependencies:
+  server:
+    PlaceholderAPI:
+      load: BEFORE
+      required: true
+load: POSTWORLD
+
+authors: [ CaravanaCraft, El Alezito ]

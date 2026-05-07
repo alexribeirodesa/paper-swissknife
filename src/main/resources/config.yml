@@ -1,0 +1,38 @@
+welcome:
+  enabled: true
+  message:
+    - "<green>Bem-vindo de volta ao Caravana Craft, <white>%player_name%!"
+    - "<gray>Você tem <green># dias <gray>de crédito restantes."
+    - "<gold>• <yellow>Use <gold>/home <yellow>para retornar à sua casa."
+    - "<gold>• <yellow>Use <gold>/claim <yellow>para marcar um novo território."
+    - "<gold>• <yellow>Use o nosso <gold>Discord <yellow>para enviar qualquer problema!"
+    - "<aqua>[ATENÇÃO] <white>O servidor pode conter jogadores gravando ou transmitindo."
+    - "<gray>Evite compartilhar informações pessoais ou linguagem inadequada."
+
+hud:
+  actionbar:
+    enabled: true
+    message: "<gray>Jogador: <white>%player_name% <red>❤ %player_health_rounded%"
+  bossbar:
+    enabled: true
+    message: "<gray>Jogador: <white>%player_name% <red>❤ %player_health_rounded%"
+    hide-during-raids: true
+    hide-near-bosses: true
+  compass:
+    enabled: true
+    north: ""
+    south: ""
+    east: ""
+    west: ""
+    divider: "            "
+
+restart:
+  enabled: true
+  schedules:
+    - "12:00"
+    - "3:00"
+  alerts: [1800, 600, 60, 30, 10, 3, 2, 1]
+  messages:
+    minutes: "<yellow>O servidor reiniciará em <white># <yellow>minutos!"
+    seconds: "<yellow>O servidor reiniciará em <white># <yellow>segundos!"
+    restarting: "<red>Reiniciando agora..."
