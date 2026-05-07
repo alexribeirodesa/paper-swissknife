@@ -1,38 +1,58 @@
 welcome:
   enabled: true
+  title: "<gold>Server <aqua>Name"
+  subtitle: "<gray>Welcome <white>%player_name%</white>!"
   message:
-    - "<green>Bem-vindo de volta ao Caravana Craft, <white>%player_name%!"
-    - "<gray>Você tem <green># dias <gray>de crédito restantes."
-    - "<gold>• <yellow>Use <gold>/home <yellow>para retornar à sua casa."
-    - "<gold>• <yellow>Use <gold>/claim <yellow>para marcar um novo território."
-    - "<gold>• <yellow>Use o nosso <gold>Discord <yellow>para enviar qualquer problema!"
-    - "<aqua>[ATENÇÃO] <white>O servidor pode conter jogadores gravando ou transmitindo."
-    - "<gray>Evite compartilhar informações pessoais ou linguagem inadequada."
+    - "<green>Welcome back to the server, <white>%player_name%!"
+    - "<gold>• <yellow>Use <gold>/home <yellow>to return to your base."
+    - "<gold>• <yellow>Use <gold>/claim <yellow>to protect a new territory."
+    - "<gold>• <yellow>Join our <gold>Discord <yellow>to report any issues!"
+    - "<aqua>[NOTICE] <white>This server may have players recording or streaming."
+    - "<gray>Please avoid sharing personal info or using inappropriate language."
 
 hud:
   actionbar:
     enabled: true
-    message: "<gray>Jogador: <white>%player_name% <red>❤ %player_health_rounded%"
+    message: "Next restart at <gray>%swissknife_restarttime_formated%"
   bossbar:
     enabled: true
-    message: "<gray>Jogador: <white>%player_name% <red>❤ %player_health_rounded%"
+    message: "<gray>Player: <white>%player_name% <red>❤ %player_health_rounded%"
     hide-during-raids: true
     hide-near-bosses: true
   compass:
     enabled: true
-    north: ""
-    south: ""
-    east: ""
-    west: ""
-    divider: "            "
+    north: "N"
+    south: "S"
+    east: "E"
+    west: "W"
+    divider: "  -  -  |  -  -  "
+    waypoints:
+      death:
+        enabled: true
+        icon: "☠"
+        color: "<white>"
+        despawn-time: 1800
+        messages:
+          death: "#I <yellow>%player_name% died at location <white>#X #Y #Z (#W)."
+          near: "<yellow>You are close to your items!"
+      waypoint:
+        enabled: true
+        icon: "V"
+        note: "TODO"
+      spawn:
+        enabled: true
+        icon: "#"
+        node: "TODO"
 
 restart:
   enabled: true
   schedules:
-    - "12:00"
     - "3:00"
+    - "12:00"
   alerts: [1800, 600, 60, 30, 10, 3, 2, 1]
   messages:
-    minutes: "<yellow>O servidor reiniciará em <white># <yellow>minutos!"
-    seconds: "<yellow>O servidor reiniciará em <white># <yellow>segundos!"
-    restarting: "<red>Reiniciando agora..."
+    minutes: "<yellow>The server will restart in <white># <yellow>minutes!"
+    minute: "<yellow>The server will restart in <white># <yellow>minute!"
+    seconds: "<yellow>The server will restart in <white># <yellow>seconds!"
+    second: "<yellow>The server will restart in <white># <yellow>second!"
+    restarting: "<red>Restarting now..."
