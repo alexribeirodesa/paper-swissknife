@@ -11,13 +11,13 @@ A versatile "all-in-one" utility plugin for PaperMC designed to handle alerts, p
 * **Custom Welcome System:** Greet players with fully customizable Titles, Subtitles, and Chat messages upon joining.
 
 * **Dynamic BossBar & Death Compass:**
-* Displays a custom BossBar message.
-* Features a built-in compass pointing to the player's last 5 death locations.
-* **Smart Priority:** The BossBar automatically hides during Boss fights or Raids to keep the focus on the action.
+  * Displays a custom BossBar message.
+  * Features a built-in compass pointing to the player's last 5 death locations.
+  * **Smart Priority:** The BossBar automatically hides during Boss fights or Raids to keep the focus on the action.
 
 * **Scheduled Restart Alerts:** Set up automated countdowns and messages for server maintenance, updates, or backups.
-* **Note:** This handles the notifications only; actual restarts should be managed via Cron or Pterodactyl schedules.
-* **Modern Formatting:** Full support for MiniMessage (rich colors/events) and PlaceholderAPI integration for all messages.
+  * **Note:** This handles the notifications only; actual restarts should be managed via Cron or Pterodactyl schedules.
+  * **Modern Formatting:** Full support for MiniMessage (rich colors/events) and PlaceholderAPI integration for all messages.
 
 ## 🛠️ Requirements
 * **Server:** [PaperMC](https://papermc.io/) (Recommended version: 26.1.2)
