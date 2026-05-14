@@ -5,7 +5,9 @@
 ![Kotlin](https://img.shields.io/badge/language-Kotlin-purple)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
-A versatile "all-in-one" utility plugin for PaperMC designed to handle alerts, player guidance, and server management notifications. Created to fill the gaps left by other tools, SwissKnife provides essential features with deep customization.
+SwissKnife is a tailored utility plugin for PaperMC built to solve a specific problem: the lack of flexibility in existing notification tools.
+
+Developed to meet the unique demands of a production server, it combines essential alerts and player guidance tools into a single, highly customizable package.
 
 ## ✨ Features
 * **Custom Welcome System:** Greet players with fully customizable Titles, Subtitles, and Chat messages upon joining.

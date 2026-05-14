@@ -11,6 +11,7 @@ import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.java.JavaPlugin
+import org.elalezito.swissKnife.objects.Config
 import org.elalezito.swissKnife.objects.Toolkit
 import java.io.File
 import java.io.IOException
@@ -23,15 +24,13 @@ class PlayerListener(private val plugin: JavaPlugin,
 
 	@EventHandler
 	fun onJoin(event: PlayerJoinEvent) {
-		val config = plugin.config
+		//val config = plugin.config
 
 		// bossbar
 		deathManager.loadDeathList(event.player)
 		bossBarManager.createBossBar(event.player)
 
-		// welcome message
-		val welcomeMessageEnabled: Boolean = config.getBoolean("welcome.enabled", false)
-		if (!welcomeMessageEnabled)
+		if (!Config.welcome.enabled)
 			return;
 
 		plugin.launch {
@@ -39,17 +38,17 @@ class PlayerListener(private val plugin: JavaPlugin,
 			delay(5000)
 
 			// title
-			val welcomeTitle: String = config.getString("welcome.title") ?: "Welcome Title"
-			val welcomeSubtitle: String = config.getString("welcome.subtitle") ?: "Welcome Subtitle"
-			Toolkit.title(event.player, welcomeTitle, welcomeSubtitle)
+			Toolkit.title(event.player, Config.welcome.title, Config.welcome.subtitle)
 
 			delay(5000)
 
 			// welcome message
-			val welcomeLines: List<String> = config.getStringList("welcome.message")
+			if(Config.welcome.message.isNotBlank())
+				Toolkit.send(event.player, Config.welcome.message)
+			/*val welcomeLines: List<String> = config.getStringList("welcome.message")
 			welcomeLines.forEach { line ->
 				Toolkit.send(event.player, line)
-			}
+			}*/
 		}
 	}
 
