@@ -35,12 +35,15 @@ class PlayerListener(private val plugin: JavaPlugin,
 			return;
 
 		plugin.launch {
-			delay(500)
+			// delay pelo logo da mojang
+			delay(5000)
 
 			// title
 			val welcomeTitle: String = config.getString("welcome.title") ?: "Welcome Title"
 			val welcomeSubtitle: String = config.getString("welcome.subtitle") ?: "Welcome Subtitle"
 			Toolkit.title(event.player, welcomeTitle, welcomeSubtitle)
+
+			delay(5000)
 
 			// welcome message
 			val welcomeLines: List<String> = config.getStringList("welcome.message")

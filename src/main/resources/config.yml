@@ -2,13 +2,13 @@ welcome:
   enabled: true
   title: "<gold>Server <aqua>Name"
   subtitle: "<gray>Welcome <white>%player_name%</white>!"
-  message:
-    - "<green>Welcome back to the server, <white>%player_name%!"
-    - "<gold>• <yellow>Use <gold>/home <yellow>to return to your base."
-    - "<gold>• <yellow>Use <gold>/claim <yellow>to protect a new territory."
-    - "<gold>• <yellow>Join our <gold>Discord <yellow>to report any issues!"
-    - "<aqua>[NOTICE] <white>This server may have players recording or streaming."
-    - "<gray>Please avoid sharing personal info or using inappropriate language."
+  message: |
+    <green>Welcome back to the server, <white>%player_name%!
+    <gold>• <yellow>Use <gold>/home <yellow>to return to your base.
+    <gold>• <yellow>Use <gold>/claim <yellow>to protect a new territory.
+    <gold>• <yellow>Join our <gold>Discord <yellow>to report any issues!
+    <aqua>[NOTICE] <white>This server may have players recording or streaming.
+    <gray>Please avoid sharing personal info or using inappropriate language.
 
 hud:
   actionbar:
@@ -49,6 +49,7 @@ restart:
   schedules:
     - "3:00"
     - "12:00"
+    - "18:19"
   alerts: [1800, 600, 60, 30, 10, 3, 2, 1]
   messages:
     minutes: "<yellow>The server will restart in <white># <yellow>minutes!"

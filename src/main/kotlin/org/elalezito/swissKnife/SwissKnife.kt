@@ -3,6 +3,7 @@ package org.elalezito.swissKnife
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import org.bukkit.plugin.java.JavaPlugin
+import org.elalezito.swissKnife.objects.Config
 import org.elalezito.swissKnife.objects.Toolkit
 
 class SwissKnife : JavaPlugin() {
@@ -15,7 +16,7 @@ class SwissKnife : JavaPlugin() {
 		Toolkit.setPlugin(this)
 
 		// inicia o config
-		saveDefaultConfig()
+		Config.init(this)
 
 		// registra comandos
 		val manager = this.lifecycleManager
@@ -28,8 +29,7 @@ class SwissKnife : JavaPlugin() {
 						Commands.literal("reload")
 							.requires { source -> source.sender.hasPermission("swissknife.admin") }
 							.executes { context ->
-								reloadConfig()
-
+								Config.load()
 								return@executes 1
 							}
 					).build(),
