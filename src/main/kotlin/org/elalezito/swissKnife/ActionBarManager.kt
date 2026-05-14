@@ -8,6 +8,8 @@ import org.bukkit.plugin.java.JavaPlugin
 import kotlinx.coroutines.delay                // Importa a suspensão
 import kotlinx.coroutines.isActive             // Importa a verificação de corrotina ativa
 import me.clip.placeholderapi.PlaceholderAPI
+import org.elalezito.swissKnife.objects.Config
+import org.elalezito.swissKnife.objects.HudActionbarData
 import org.elalezito.swissKnife.objects.Toolkit
 
 class ActionBarManager(private val plugin: JavaPlugin) {
@@ -16,16 +18,15 @@ class ActionBarManager(private val plugin: JavaPlugin) {
 	fun startActionBarLoop() {
 		plugin.launch {
 			while (isActive) {
-				val config = plugin.config
-				val actionBarEnabled: Boolean = config.getBoolean("hud.actionbar.enabled", false)
+				val actionbarData: HudActionbarData = Config.hud.actionbarData
 
-				if (!actionBarEnabled) {
+				if (!actionbarData.enabled) {
 					delay(5000)
 					continue
 				}
 
 				plugin.server.onlinePlayers.forEach { player ->
-					val rawText: String = config.getString("hud.actionbar.message") ?: ">> MESSAGE NOT SET <<"
+					val rawText: String = actionbarData.message
 					val formatted = PlaceholderAPI.setPlaceholders(player, rawText)
 					val component = mm.deserialize(formatted)
 					player.sendActionBar(component)

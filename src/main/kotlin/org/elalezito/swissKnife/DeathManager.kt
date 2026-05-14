@@ -5,18 +5,13 @@ import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.elalezito.swissKnife.data.DeathPoint
+import org.elalezito.swissKnife.objects.Config
 import org.elalezito.swissKnife.objects.Toolkit
 import java.io.File
 import java.io.IOException
 import java.util.UUID
 
 class DeathManager(private val plugin: JavaPlugin) {
-	val config = plugin.config
-
-	val compassWaypointDeathIcon: String = config.getString("hud.compass.waypoints.death.icon") ?: "D"
-	val compassWaypointDeathMessage: String = config.getString("hud.compass.waypoints.death.messages.death") ?: "#X #Y #Z (#W)"
-	val compassWaypointDeathDespawnTime: Int = config.getInt("hud.compass.waypoints.death.despawn-time") ?: 1800
-
 	private val deathNote = mutableMapOf<UUID, MutableList<DeathPoint>>()
 
 	fun loadDeathList(player: Player) {
@@ -65,11 +60,14 @@ class DeathManager(private val plugin: JavaPlugin) {
 	}
 
 	fun deathMessage(player: Player, location: Location) {
+		val deathIcon: String = Config.hud.compassData.waypoints["death"]?.icon ?: "X"
+		val deathMessage: String = Config.hud.compassData.waypoints["death"]?.message["death"] ?: "err-hudCompassWaypointDeathMessage"
+
 		// #X #Y #Z (#W)
 		// "\uE8F5"
 
-		Toolkit.send(player, compassWaypointDeathMessage
-			.replace("#I", compassWaypointDeathIcon)
+		Toolkit.send(player, deathMessage
+			.replace("#I", deathIcon)
 			.replace("#X", location.blockX.toString())
 			.replace("#Y", location.blockY.toString())
 			.replace("#Z", location.blockZ.toString())
@@ -83,9 +81,10 @@ class DeathManager(private val plugin: JavaPlugin) {
 	}
 
 	fun getDeathList(player: Player): List<DeathPoint> {
+		val deathDespawnTime: Int = Config.hud.compassData.waypoints["death"]?.despawnTime ?: 1800
 		val list = deathNote.getOrPut(player.uniqueId) {mutableListOf()}
 
-		list.removeIf { it.isExpired(compassWaypointDeathDespawnTime) }
+		list.removeIf { it.isExpired(deathDespawnTime) }
 		return list.filter { it.world_key == player.world.name }
 	}
 

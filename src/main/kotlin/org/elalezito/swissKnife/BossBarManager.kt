@@ -12,6 +12,7 @@ import org.bukkit.entity.EnderDragon
 import org.bukkit.entity.Player
 import org.bukkit.entity.Wither
 import org.bukkit.plugin.java.JavaPlugin
+import org.elalezito.swissKnife.objects.Config
 import org.elalezito.swissKnife.objects.Toolkit
 import java.util.UUID
 import kotlin.math.absoluteValue
@@ -38,7 +39,7 @@ class BossBarManager(private val plugin: JavaPlugin, private val deathManager: D
 		val output = distanceSq > 0.001
 
 		if(output || deltaYaw)
-			PlayerLastPositionCooldown[player.uniqueId] = 10
+			PlayerLastPositionCooldown[player.uniqueId] = 3
 
 		return output
 	}
@@ -108,27 +109,15 @@ class BossBarManager(private val plugin: JavaPlugin, private val deathManager: D
 	fun startBossBarLoop() {
 		plugin.launch {
 			while (isActive) {
-				val config = plugin.config
-				val bossBarEnabled: Boolean = config.getBoolean("hud.bossbar.enabled", false)
-				val compassEnabled: Boolean = config.getBoolean("hud.compass.enabled", false)
-
-
-				val compassNorth: String = config.getString("hud.compass.north") ?: "N"
-				val compassSouth: String = config.getString("hud.compass.south") ?: "S"
-				val compassEast: String = config.getString("hud.compass.east") ?: "E"
-				val compassWest: String = config.getString("hud.compass.west") ?: "W"
-				val compassDivider: String = config.getString("hud.compass.divider") ?: " - - | - - "
-
-				val compassWaypointDeathEnabled: Boolean = config.getBoolean("hud.compass.waypoints.death.enabled", false)
-				val compassWaypointDeathIcon: String = config.getString("hud.compass.waypoints.death.icon") ?: "D"
-				val compassWaypointDeathMessageNear: String = config.getString("hud.compass.waypoints.death.messages.near") ?: "D"
+				val bossbarData = Config.hud.bossbarData
+				val compassData = Config.hud.compassData
 
 				plugin.server.onlinePlayers.forEach { player ->
 					val bossBar = activeBossBars[player.uniqueId] ?: return@forEach
 					val deathList = deathManager.getDeathList(player)
 					val positionCooldown: Int = PlayerLastPositionCooldown[player.uniqueId] ?: 0
 
-					if (bossBarEnabled && canShowBossBar(player)) {
+					if (bossbarData.enabled && canShowBossBar(player)) {
 						player.showBossBar(bossBar)
 
 						val isMoving = isPlayerMoving(player)
@@ -138,17 +127,18 @@ class BossBarManager(private val plugin: JavaPlugin, private val deathManager: D
 							PlayerLastPositionCooldown[player.uniqueId] = positionCooldown - 1
 						}
 
-						if(compassEnabled &&
+						if(compassData.enabled &&
 							(isMoving || positionCooldown > 0)) {
 							var normalizedYaw = (player.yaw % 360)
 							if (normalizedYaw < 0) normalizedYaw += 360
 
+
 							// compass base strip (360°)
-							//val strip = "L   -   -   |   -   -   S   -   -   |   -   -   O   -   -   |   -   -   N   -   -   |   -   -   "
-							var strip = StringBuilder("${compassEast}${compassDivider}${compassSouth}${compassDivider}${compassWest}${compassDivider}${compassNorth}${compassDivider}")
+							//val strip = "EDSDODND"
+							var strip = StringBuilder("${compassData.east}${compassData.divider}${compassData.south}${compassData.divider}${compassData.west}${compassData.divider}${compassData.north}${compassData.divider}")
 
 							// death waypoint
-							if(compassWaypointDeathEnabled) {
+							if(compassData.waypoints["death"]?.enabled ?: false) {
 								deathList.forEach { point ->
 									val dX: Double = (point.x - player.location.blockX).toDouble()
 									val dY: Double = (point.y - player.location.blockY).toDouble()
@@ -157,7 +147,7 @@ class BossBarManager(private val plugin: JavaPlugin, private val deathManager: D
 									val dist: Int = (dX.absoluteValue + dY.absoluteValue + dZ.absoluteValue).toInt() / 3
 
 									if (dist > 2 && dist < 10) {
-										Toolkit.send(player, compassWaypointDeathMessageNear)
+										Toolkit.send(player, compassData.waypoints["death"]?.message["near"] ?: "err-hudCompassWaypointDeathNear")
 										deathManager.removeDeath(player, point)
 										return@forEach
 									}
@@ -167,7 +157,7 @@ class BossBarManager(private val plugin: JavaPlugin, private val deathManager: D
 									val index: Int = ((deathAngle / 360.0) * strip.length).toInt()
 
 									if (index in 0 until strip.length) {
-										strip.setCharAt(index, compassWaypointDeathIcon.toCharArray()[0])
+										strip.setCharAt(index, compassData.waypoints["death"]?.icon?.toCharArray()[0] ?: 'X')
 									}
 								}
 							}
@@ -178,8 +168,7 @@ class BossBarManager(private val plugin: JavaPlugin, private val deathManager: D
 							val rawText: String = axis.substring(index.toInt(), index.toInt() + (strip.length / 2 + 1))
 							component = mm.deserialize(rawText)
 						} else {
-							val rawText: String = config.getString("hud.bossbar.message") ?: "MESSAGE NOT SET"
-							val formatted = PlaceholderAPI.setPlaceholders(player, rawText)
+							val formatted = PlaceholderAPI.setPlaceholders(player, bossbarData.message)
 							component = mm.deserialize(formatted)
 						}
 
@@ -189,7 +178,7 @@ class BossBarManager(private val plugin: JavaPlugin, private val deathManager: D
 					}
 				}
 
-				delay(if (bossBarEnabled) 500 else 5000)
+				delay(if (compassData.enabled) 500 else 5000)
 			}
 		}
 	}
