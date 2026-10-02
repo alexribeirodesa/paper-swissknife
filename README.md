@@ -1,7 +1,7 @@
 # SwissKnife 🛠️
 
 ![Minecraft](https://img.shields.io/badge/Minecraft-Paper%2026.1.2-orange)
-![Build Version](https://img.shields.io/badge/version-1.0--SNAPSHOT-orange)
+![Build Version](https://img.shields.io/badge/version-1.1--SNAPSHOT-orange)
 ![Kotlin](https://img.shields.io/badge/language-Kotlin-purple)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
@@ -119,6 +119,30 @@ hud:
         enabled: false
         icon: '#'
         node: "TODO"
+
+# hub        
+hub:
+  # force player to TP when join and world change,
+  # use it in lobby, minigames, afk and any other world...
+  teleport:
+    enabled: false
+    hub-world: "world"
+    worlds:
+      world:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        angle: 0.0
+      pvp:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        angle: 0.0
+      parkour:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        angle: 0.0
 ```
 
 ## 🏗️ Development

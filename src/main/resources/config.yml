@@ -60,7 +60,7 @@ restart:
 
 hub:
   teleport:
-    enabled: true
+    enabled: false
     hub-world: "world"
     worlds:
       world:
