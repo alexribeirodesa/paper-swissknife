@@ -3,21 +3,19 @@ package org.elalezito.swissKnife
 import com.github.shynixn.mccoroutine.bukkit.launch
 import kotlinx.coroutines.delay
 import net.kyori.adventure.text.minimessage.MiniMessage
-import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
+import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.java.JavaPlugin
 import org.elalezito.swissKnife.objects.Config
 import org.elalezito.swissKnife.objects.Toolkit
-import java.io.File
-import java.io.IOException
-import javax.tools.Tool
 
 class PlayerListener(private val plugin: JavaPlugin,
+                     private val teleportManager: TeleportManager,
 										 private val deathManager: DeathManager,
 										 private val bossBarManager: BossBarManager) : Listener {
 	private val mm = MiniMessage.miniMessage()
@@ -25,6 +23,8 @@ class PlayerListener(private val plugin: JavaPlugin,
 	@EventHandler
 	fun onJoin(event: PlayerJoinEvent) {
 		//val config = plugin.config
+		// teleport
+		teleportManager.teleport(event.player, Config.hub.teleport.hubWorld)
 
 		// bossbar
 		deathManager.loadDeathList(event.player)
@@ -50,6 +50,14 @@ class PlayerListener(private val plugin: JavaPlugin,
 				Toolkit.send(event.player, line)
 			}*/
 		}
+	}
+
+	@EventHandler
+	fun onWorldChange(event: PlayerChangedWorldEvent) {
+		val player = event.player
+		val world = player.world.name
+
+		teleportManager.teleport(player, world)
 	}
 
 	@EventHandler

@@ -7,6 +7,7 @@ import org.elalezito.swissKnife.objects.Config
 import org.elalezito.swissKnife.objects.Toolkit
 
 class SwissKnife : JavaPlugin() {
+	lateinit var teleportManager: TeleportManager
 	lateinit var actionBarManager: ActionBarManager
 	lateinit var bossBarManager: BossBarManager
 	lateinit var restartManager: RestartManager
@@ -38,6 +39,9 @@ class SwissKnife : JavaPlugin() {
 			)
 		}
 
+		// inicia o gerenciador de tp
+		teleportManager = TeleportManager(this)
+
 		// inicia o gerenciador do actionbar
 		actionBarManager = ActionBarManager(this)
 		actionBarManager.startActionBarLoop()
@@ -52,7 +56,7 @@ class SwissKnife : JavaPlugin() {
 		restartManager.startRestartLoop()
 
 		// registra eventos
-		val playerListener = PlayerListener(this, deathManager, bossBarManager)
+		val playerListener = PlayerListener(this, teleportManager, deathManager, bossBarManager)
 		server.pluginManager.registerEvents(playerListener, this)
 
 		// registra placeholders

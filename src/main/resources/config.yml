@@ -57,3 +57,24 @@ restart:
     seconds: "<yellow>The server will restart in <white># <yellow>seconds!"
     second: "<yellow>The server will restart in <white># <yellow>second!"
     restarting: "<red>Restarting now..."
+
+hub:
+  teleport:
+    enabled: true
+    hub-world: "world"
+    worlds:
+      world:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        angle: 0.0
+      pvp:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        angle: 0.0
+      parkour:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        angle: 0.0

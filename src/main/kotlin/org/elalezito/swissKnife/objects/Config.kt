@@ -2,6 +2,7 @@ package org.elalezito.swissKnife.objects
 
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.plugin.java.JavaPlugin
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -59,6 +60,24 @@ data class RestartData(
 	val messages: Map<String, String> = emptyMap()
 )
 
+// hub
+data class HubData(
+	val teleport: HubTeleportData
+)
+
+data class HubTeleportData(
+	val enabled: Boolean,
+	val hubWorld: String,
+	val worlds: MutableMap<String, HubTeleportPositionData> = mutableMapOf()
+)
+data class HubTeleportPositionData(
+	val x: Double,
+	val y: Double,
+	val z: Double,
+	val angle: Float,
+)
+
+
 object Config {
 	private val mm = MiniMessage.miniMessage()
 	private val legacySerializer = LegacyComponentSerializer.legacySection()
@@ -76,6 +95,10 @@ object Config {
 	private lateinit var _restart: RestartData
 	val restart: RestartData
 		get() = _restart
+
+	private lateinit var _hub: HubData
+	val hub: HubData
+		get() = _hub
 
 	fun init(javaPlugin: JavaPlugin) {
 		plugin = javaPlugin
@@ -143,6 +166,30 @@ object Config {
 			)
 		)
 
+		// hub
+		val worldsSection = getConfigurationSection("hub.teleport.worlds")
+		_hub = HubData(
+			HubTeleportData(
+				enabled = getBool("hub.teleport.enabled", false),
+				hubWorld = getString("hub.teleport.hub-world", ""),
+				worlds = mutableMapOf()
+			)
+		)
+
+		if(worldsSection != null) {
+			for (worldName in worldsSection.getKeys(false)) {
+				Toolkit.log("TP WORLD = $worldName")
+				_hub.teleport.worlds[worldName] = HubTeleportPositionData(
+					x = getDouble("hub.teleport.worlds.${worldName}.x"),
+					y = getDouble("hub.teleport.worlds.${worldName}.y"),
+					z = getDouble("hub.teleport.worlds.${worldName}.z"),
+					angle = getDouble("hub.teleport.worlds.${worldName}.angle").toFloat()
+				)
+			}
+		}
+
+		Toolkit.log("TP -> ${_hub.toString()}")
+
 		_restart.schedules = plugin.config.getStringList("restart.schedules")
 			.map { LocalTime.parse(it, DateTimeFormatter.ofPattern("H:mm")) }
 			.sorted()
@@ -150,6 +197,11 @@ object Config {
 		_restart.alerts = plugin.config.getIntegerList("restart.alerts")
 
 		Toolkit.log("Configuração carregada com sucesso!")
+	}
+
+	private fun getDouble(path: String, default: Double = 0.0): Double {
+		val config = plugin.config
+		return config.getDouble(path, default)
 	}
 
 	private fun getInt(path: String, default: Int = 0): Int {
@@ -165,5 +217,10 @@ object Config {
 	private fun getString(path: String, default: String = "NULLERR"): String {
 		val config = plugin.config
 		return config.getString(path) ?: default
+	}
+
+	private fun getConfigurationSection(path: String): ConfigurationSection? {
+		val config = plugin.config
+		return config.getConfigurationSection(path)
 	}
 }
