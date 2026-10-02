@@ -1,7 +1,7 @@
 # SwissKnife 🛠️
 
 ![Minecraft](https://img.shields.io/badge/Minecraft-Paper%2026.1.2-orange)
-![Build Version](https://img.shields.io/badge/version-1.1--SNAPSHOT-orange)
+![Build Version](https://img.shields.io/badge/version-1.2--SNAPSHOT-orange)
 ![Kotlin](https://img.shields.io/badge/language-Kotlin-purple)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
