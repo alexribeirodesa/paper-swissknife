@@ -12,6 +12,8 @@ Developed to meet the unique demands of a production server, it combines essenti
 ## ✨ Features
 * **Custom Welcome System:** Greet players with fully customizable Titles, Subtitles, and Chat messages upon joining.
 
+* **World & Hub Teleportation System:** Automatically teleports players to designated fixed spawn points upon joining or switching worlds. Ideal for managing hubs, lobbies, PvP arenas, minigames, parkour courses, AFK zones, or multi-world setups.
+
 * **Dynamic BossBar & Death Compass:**
   * Displays a custom BossBar message.
   * Features a built-in compass pointing to the player's last 5 death locations.
