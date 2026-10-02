@@ -13,6 +13,7 @@ import org.bukkit.entity.Player
 import org.bukkit.entity.Wither
 import org.bukkit.plugin.java.JavaPlugin
 import org.elalezito.swissKnife.objects.Config
+import org.elalezito.swissKnife.objects.HudCompassWaypointsData
 import org.elalezito.swissKnife.objects.Toolkit
 import java.util.UUID
 import kotlin.math.absoluteValue
@@ -106,6 +107,35 @@ class BossBarManager(private val plugin: JavaPlugin, private val deathManager: D
 		}
 	}
 
+	private fun waypointFormat (strip: String, waypoint: HudCompassWaypointsData): String {
+		val tagRegex = Regex("<([a-zA-Z0-9_:#]+)>")
+		val openTags = waypoint.color
+		val closeTags = tagRegex.findAll(openTags)
+			.map { "</${it.groupValues[1]}>" }
+			.toList()
+			.reversed()
+			.joinToString("")
+
+
+		//val closeTags = "</reset>" // tenho que pegar elas, inverter a ordem e substituir "<" por "</"
+
+		return strip.replace(waypoint.icon[0].toString(), "${openTags}${waypoint.icon[0].toString()}${closeTags}")
+	}
+
+	private fun stripFormat(strip: String): String {
+		val compassData = Config.hud.compassData
+
+		var output = strip;
+		output = waypointFormat(output, compassData.north)
+		output = waypointFormat(output, compassData.south)
+		output = waypointFormat(output, compassData.east)
+		output = waypointFormat(output, compassData.west)
+
+		output = waypointFormat(output, compassData.waypoints["death"]!!)
+
+		return "${compassData.divider.color}${output}"
+	}
+
 	fun startBossBarLoop() {
 		plugin.launch {
 			while (isActive) {
@@ -132,10 +162,57 @@ class BossBarManager(private val plugin: JavaPlugin, private val deathManager: D
 							var normalizedYaw = (player.yaw % 360)
 							if (normalizedYaw < 0) normalizedYaw += 360
 
+							// largura da fita
+							val stripLen = compassData.east.icon.length +
+											compassData.south.icon.length +
+											compassData.west.icon.length +
+											compassData.north.icon.length +
+											(compassData.divider.icon.length * 4)
+
+							var stripRaw = StringBuilder("${compassData.east.icon}${compassData.divider.icon}${compassData.south.icon}${compassData.divider.icon}${compassData.west.icon}${compassData.divider.icon}${compassData.north.icon}${compassData.divider.icon}")
+
+							// death waypoint
+							if(compassData.waypoints["death"]?.enabled ?: false) {
+								deathList.forEach { point ->
+									val dX: Double = (point.x - player.location.blockX).toDouble()
+									val dY: Double = (point.y - player.location.blockY).toDouble()
+									val dZ: Double = (point.z - player.location.blockZ).toDouble()
+
+									val dist: Int = (dX.absoluteValue + dY.absoluteValue + dZ.absoluteValue).toInt() / 3
+
+									if (dist > 2 && dist < 10) {
+										Toolkit.send(player, compassData.waypoints["death"]?.message["near"] ?: "err-hudCompassWaypointDeathNear")
+										deathManager.removeDeath(player, point)
+										return@forEach
+									}
+
+									var deathAngle = Math.toDegrees(Math.atan2(dZ, dX))
+									deathAngle = (deathAngle % 360 + 360) % 360
+									val index: Int = ((deathAngle / 360.0) * stripRaw.length).toInt()
+
+									if (index in 0 until stripRaw.length) {
+										stripRaw.setCharAt(index, compassData.waypoints["death"]?.icon?.toCharArray()[0] ?: 'X')
+									}
+								}
+							}
+
+							var strip = "${stripRaw.toString()}${stripRaw.toString()}"
+
+							val index = ((normalizedYaw / 360.0) * stripLen).toInt()
+
+							val stripCut: String = strip.substring(index.toInt(), index.toInt() + (stripLen / 2 + 1))
+							var stripFormatted: String = stripFormat("$stripCut");
+								//val stripFormatted: String = "${}${waypointFormat(stripCut, )}"
+							component = mm.deserialize(stripFormatted)
+
+							/*
+							var normalizedYaw = (player.yaw % 360)
+							if (normalizedYaw < 0) normalizedYaw += 360
+
 
 							// compass base strip (360°)
 							//val strip = "EDSDODND"
-							var strip = StringBuilder("${compassData.east}${compassData.divider}${compassData.south}${compassData.divider}${compassData.west}${compassData.divider}${compassData.north}${compassData.divider}")
+							var strip = StringBuilder("${compassData.east.icon}${compassData.divider}${compassData.south.icon}${compassData.divider}${compassData.west.icon}${compassData.divider}${compassData.north.icon}${compassData.divider}")
 
 							// death waypoint
 							if(compassData.waypoints["death"]?.enabled ?: false) {
@@ -167,6 +244,7 @@ class BossBarManager(private val plugin: JavaPlugin, private val deathManager: D
 
 							val rawText: String = axis.substring(index.toInt(), index.toInt() + (strip.length / 2 + 1))
 							component = mm.deserialize(rawText)
+							*/
 						} else {
 							val formatted = PlaceholderAPI.setPlaceholders(player, bossbarData.message)
 							component = mm.deserialize(formatted)

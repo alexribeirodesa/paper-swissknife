@@ -36,11 +36,11 @@ data class HudBossbarData(
 
 data class HudCompassData(
 	val enabled: Boolean,
-	val north: String,
-	val south: String,
-	val east: String,
-	val west: String,
-	val divider: String,
+	val north: HudCompassWaypointsData,
+	val south: HudCompassWaypointsData,
+	val east: HudCompassWaypointsData,
+	val west: HudCompassWaypointsData,
+	val divider: HudCompassWaypointsData,
 	val waypoints: Map<String, HudCompassWaypointsData> = emptyMap()
 )
 
@@ -132,11 +132,26 @@ object Config {
 			),
 			HudCompassData(
 				getBool("hud.compass.enabled", true),
-				getString("hud.compass.north", "N"),
-				getString("hud.compass.south", "S"),
-				getString("hud.compass.east", "E"),
-				getString("hud.compass.west", "W"),
-				getString("hud.compass.divider", "  -  -  |  -  -  "),
+				HudCompassWaypointsData(
+					icon = getString("hud.compass.north.icon", "N"),
+					color = getString("hud.compass.north.color", "")
+				),
+				HudCompassWaypointsData(
+					icon = getString("hud.compass.south.icon", "S"),
+					color = getString("hud.compass.south.color", "")
+				),
+				HudCompassWaypointsData(
+					icon = getString("hud.compass.east.icon", "E"),
+					color = getString("hud.compass.east.color", "")
+				),
+				HudCompassWaypointsData(
+					icon = getString("hud.compass.west.icon", "W"),
+					color = getString("hud.compass.west.color", "")
+				),
+				HudCompassWaypointsData(
+					icon = getString("hud.compass.divider.value", "  -  -  |  -  -  "),
+					color = getString("hud.compass.divider.color", "<gray>")
+				),
 				mapOf(
 					"death" to HudCompassWaypointsData(
 						getBool("hud.compass.waypoints.death.enabled", true),
